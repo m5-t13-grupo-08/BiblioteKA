@@ -9,6 +9,6 @@ class Loan(models.Model):
         on_delete=models.CASCADE,
         related_name="loan",
     )
-    loan_date = models.DateField()
+    loan_date = models.DateField(auto_now_add=True)
     devolutions_date = models.DateField()
-    renovations = models.IntegerField()
+    renovations = models.IntegerField(null=True)

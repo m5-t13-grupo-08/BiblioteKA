@@ -30,7 +30,7 @@ class CopyView(ListCreateAPIView):
         serializer.save(book=book)
 
 
-class CopyDetailView(RetrieveDestroyAPIView):
+class CopyDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = CopySerializer
     queryset = Copy.objects.all()
     lookup_url_kwarg = "copy_id"
