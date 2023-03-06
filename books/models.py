@@ -32,6 +32,7 @@ class Copy(models.Model):
         default=Sector.general_collection,
         null=False,
     )
+    is_free = models.BooleanField(default=True)
     loan = models.ForeignKey(
         "loans.Loan",
         on_delete=models.CASCADE,
