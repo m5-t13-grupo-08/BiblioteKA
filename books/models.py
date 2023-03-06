@@ -16,7 +16,10 @@ class Book(models.Model):
     page_number = models.IntegerField(null=False)
     publisher = models.CharField(max_length=40)
     cdu = models.CharField(null=False, max_length=50)
-    followed_by = models.ManyToManyField("users.User", related_name="followed_books")
+    followed_by = models.ManyToManyField(
+        "users.User",
+        related_name="followed_books",
+    )
 
 
 class Copy(models.Model):
