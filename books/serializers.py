@@ -23,3 +23,17 @@ class BookSerializer(serializers.ModelSerializer):
             "followed_by",
         ]
         read_only_fields = ["followed_by"]
+
+
+class CopySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Copy
+        fields = [
+            "id",
+            "book",
+            "buyed_at",
+            "price",
+            "sector",
+            "loan",
+        ]
+        read_only_fields = ["book", "loan"]
