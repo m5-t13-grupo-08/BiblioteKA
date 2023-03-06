@@ -18,7 +18,10 @@ class UserCreateView(CreateAPIView):
         address_data = serialized.validated_data.pop("address")
         address_obj = Address.objects.create(**address_data)
 
-        user = User.objects.create(**serialized.validated_data, address=address_obj)
-        final_serialization = UserSerializer(user)
+        serialized.save(address=address_obj)
 
-        return Response(final_serialization.data, status.HTTP_201_CREATED)
+        """user = User.objects.create_user(
+            **serialized.validated_data, address=address_obj
+        )"""
+
+        return Response(serialized.data, status.HTTP_201_CREATED)

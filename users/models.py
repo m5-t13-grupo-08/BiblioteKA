@@ -27,8 +27,8 @@ class User(AbstractUser):
     )
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
-    username = models.CharField(max_length=55, unique=True)  # matricula
-    password = models.CharField(max_length=55)
+    username = models.CharField(max_length=128, unique=True)  # matricula
+    password = models.CharField(max_length=128)
     situation = models.CharField(
         max_length=20, choices=Situation.choices, default=Situation.normal, null=False
     )

@@ -27,7 +27,11 @@ class UserSerializer(serializers.ModelSerializer):
     address = AddressSerializer(required=True)
 
     def create(self, validated_data: dict) -> User:
-        return User.objects.create(**validated_data)
+        if validated_data["is_superuser"]:
+            user = User.objects.create_superuser(**validated_data)
+        else:
+            user = User.objects.create_user(**validated_data)
+        return user
 
     class Meta:
         model = User
