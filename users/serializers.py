@@ -25,9 +25,14 @@ class UserSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=User.objects.all())],
     )
     address = AddressSerializer(required=True)
+    is_superuser = serializers.BooleanField(allow_null=True, default=False)
 
     def create(self, validated_data: dict) -> User:
-        return User.objects.create(**validated_data)
+        if validated_data["is_superuser"]:
+            user = User.objects.create_superuser(**validated_data)
+        else:
+            user = User.objects.create_user(**validated_data)
+        return user
 
     class Meta:
         model = User
