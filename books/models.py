@@ -33,7 +33,10 @@ class Copy(models.Model):
         null=False,
     )
     loan = models.ForeignKey(
-        "loans.Loan", on_delete=models.CASCADE, related_name="copies"
+        "loans.Loan",
+        on_delete=models.CASCADE,
+        related_name="copies",
+        null=True,
     )
     book = models.ForeignKey(
         "books.Book", on_delete=models.CASCADE, related_name="copies"
