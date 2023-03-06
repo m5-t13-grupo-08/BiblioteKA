@@ -20,7 +20,7 @@ class BookDetailView(RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = "book_id"
 
 
-class CopyView(CreateAPIView):
+class CopyView(ListCreateAPIView):
     serializer_class = CopySerializer
     queryset = Copy.objects.all()
     lookup_url_kwarg = "book_id"
