@@ -7,8 +7,13 @@ class Loan(models.Model):
     user = models.ForeignKey(
         "users.User",
         on_delete=models.CASCADE,
-        related_name="loan",
+        related_name="loans",
+    )
+    copy = models.ForeignKey(
+        "books.Copy",
+        on_delete=models.CASCADE,
+        related_name="loans",
     )
     loan_date = models.DateField(auto_now_add=True)
-    devolutions_date = models.DateField()
+    devolutions_date = models.DateField(null=True)
     renovations = models.IntegerField(null=True)
