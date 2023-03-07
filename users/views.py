@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from rest_framework.views import Request, Response, status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .serializers import UserSerializer, AddressSerializer
 from .models import User, Address
 
 # Create your views here.
 
 
-class UserCreateView(CreateAPIView):
+class UserCreateView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -20,8 +20,10 @@ class UserCreateView(CreateAPIView):
 
         serialized.save(address=address_obj)
 
-        """user = User.objects.create_user(
-            **serialized.validated_data, address=address_obj
-        )"""
-
         return Response(serialized.data, status.HTTP_201_CREATED)
+
+
+class UserDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_url_kwarg = "user_id"
