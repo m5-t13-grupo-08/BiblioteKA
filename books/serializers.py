@@ -34,6 +34,5 @@ class CopySerializer(serializers.ModelSerializer):
             "buyed_at",
             "price",
             "sector",
-            "loan",
         ]
-        read_only_fields = ["book", "loan"]
+        read_only_fields = ["book"]

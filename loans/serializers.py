@@ -9,14 +9,14 @@ class LoanSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "user",
-            "copies",
+            "copy",
             "loan_date",
             "devolutions_date",
             "renovations",
         ]
         read_only_fields = [
             "user",
-            "copies",
+            "copy",
             "loan_date",
             "devolutions_date",
         ]

@@ -33,12 +33,6 @@ class Copy(models.Model):
         null=False,
     )
     is_free = models.BooleanField(default=True)
-    loan = models.ForeignKey(
-        "loans.Loan",
-        on_delete=models.CASCADE,
-        related_name="copies",
-        null=True,
-    )
     book = models.ForeignKey(
         "books.Book", on_delete=models.CASCADE, related_name="copies"
     )
