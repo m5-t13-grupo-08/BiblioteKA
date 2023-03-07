@@ -27,12 +27,32 @@ class UserSerializer(serializers.ModelSerializer):
     address = AddressSerializer(required=True)
     is_superuser = serializers.BooleanField(allow_null=True, default=False)
 
+    def __init__(self, *args, **kwargs):
+        super(UserSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get("request")
+        if request and (request.method == "POST" or request.method == "PATCH"):
+            self.Meta.depth = 0
+        else:
+            self.Meta.depth = 1
+
     def create(self, validated_data: dict) -> User:
         if validated_data["is_superuser"]:
             user = User.objects.create_superuser(**validated_data)
         else:
             user = User.objects.create_user(**validated_data)
         return user
+
+    def update(self, instance: User, validated_data: dict):
+        password = validated_data.pop("password", None)
+        if password:
+            instance.set_password(password)
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        instance.save()
+
+        return instance
 
     class Meta:
         model = User
@@ -47,5 +67,9 @@ class UserSerializer(serializers.ModelSerializer):
             "situation",
             "address",
             "is_superuser",
+            "followed_books",
         ]
-        extra_kwargs = {"password": {"write_only": True}}
+        extra_kwargs = {
+            "password": {"write_only": True},
+            "followed_books": {"read_only": True},
+        }
