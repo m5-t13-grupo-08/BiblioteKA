@@ -1,5 +1,6 @@
 from rest_framework.generics import ListCreateAPIView
 from .models import Loan
+from users.models import User
 from .serializers import LoanSerializer
 from django.shortcuts import get_object_or_404
 from users.models import User
@@ -19,6 +20,8 @@ class LoanView(ListCreateAPIView):
 
     def perform_create(self, serializer):
         book = get_object_or_404(Book, pk=self.kwargs.get("book_id"))
+        user = get_object_or_404(User, pk=self.kwargs.get("user_id"))
+
         found_copy = book.copies.filter(is_free=True).first()
 
         if not found_copy:
@@ -27,8 +30,8 @@ class LoanView(ListCreateAPIView):
         found_copy.is_free = False
         found_copy.save()
 
-        serializer.save(user=self.request.user, copy=found_copy)
-    
+        serializer.save(user=user, copy=found_copy)
+
     def get_queryset(self):
         queryset = self.queryset.filter(user__id=self.kwargs.get("user_id"))
         return queryset
