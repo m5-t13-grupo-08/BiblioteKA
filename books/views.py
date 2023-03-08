@@ -10,9 +10,14 @@ from .serializers import BookSerializer, CopySerializer
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import ipdb
+from books.permissions import BookPermission
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class BookView(ListCreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [BookPermission]
+
     serializer_class = BookSerializer
     queryset = Book.objects.all()
 

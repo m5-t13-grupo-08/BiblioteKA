@@ -6,10 +6,12 @@ from users.models import User
 from books.models import Copy, Book
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import NotFound
+from loans.permissions import LoanPermission
 
 
 class LoanView(ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
+    permission_classes = [LoanPermission]
 
     serializer_class = LoanSerializer
     queryset = Loan.objects.all()
@@ -26,3 +28,7 @@ class LoanView(ListCreateAPIView):
         found_copy.save()
 
         serializer.save(user=self.request.user, copy=found_copy)
+    
+    def get_queryset(self):
+        queryset = self.queryset.filter(user__id=self.kwargs.get("user_id"))
+        return queryset
