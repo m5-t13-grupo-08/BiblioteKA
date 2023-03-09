@@ -47,5 +47,5 @@ class FollowBookView(APIView):
         book.followed_by.add(request.user)
 
         return Response(
-            {"message": "Book successfully folowed!"}, status.HTTP_202_ACCEPTED
+            {"message": "Book successfully followed!"}, status.HTTP_202_ACCEPTED
         )
