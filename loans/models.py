@@ -15,5 +15,6 @@ class Loan(models.Model):
         related_name="loans",
     )
     loan_date = models.DateField(auto_now_add=True)
+    deadline = models.DateField(null=True)
     devolutions_date = models.DateField(null=True)
     renovations = models.IntegerField(null=True)

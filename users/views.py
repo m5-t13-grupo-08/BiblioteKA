@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from rest_framework.views import Request, Response, status
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from .serializers import UserSerializer, AddressSerializer
 from .models import User, Address
 
