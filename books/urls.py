@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from loans.views import LoanView
+from loans.views import LoanView, LoanDetailView
 
 urlpatterns = [
     path("books/", views.BookView.as_view()),
@@ -10,4 +10,5 @@ urlpatterns = [
     path("users/<str:user_id>/books/<str:book_id>/loan/", LoanView.as_view()),
     path("books/<str:book_id>/follow/", views.FollowBookView.as_view()),
     path("user/<str:user_id>/loans/", LoanView.as_view()),
+    path("books/loan/<str:loan_id>/", LoanDetailView.as_view())
 ]
