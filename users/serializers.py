@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import User, Address
+from datetime import datetime
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -26,6 +27,18 @@ class UserSerializer(serializers.ModelSerializer):
     )
     address = AddressSerializer(required=True)
     is_superuser = serializers.BooleanField(allow_null=True, default=False)
+
+    situation = serializers.SerializerMethodField()
+
+    def get_situation(self, obj):
+        today = datetime.now()
+        is_in_debt = (
+            obj.loans.filter(deadline__lt=today).filter(devolutions_date=None).first()
+        )
+        if is_in_debt:
+            return "debt"
+
+        return "normal"
 
     def __init__(self, *args, **kwargs):
         super(UserSerializer, self).__init__(*args, **kwargs)

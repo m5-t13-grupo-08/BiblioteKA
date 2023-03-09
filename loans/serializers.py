@@ -10,7 +10,15 @@ class LoanSerializer(serializers.ModelSerializer):
     books_title = serializers.SerializerMethodField()
 
     def get_deadline(self, obj):
-        return obj.loan_date + timedelta(days=15)
+        date = obj.loan_date + timedelta(days=15)
+
+        if date.strftime("%A") == "Saturday":
+            return date + timedelta(days=2)
+
+        if date.strftime("%A") == "Sunday":
+            return date + timedelta(days=1)
+
+        return date
 
     def get_user_email(self, obj):
         return obj.user.email
