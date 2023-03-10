@@ -31,7 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     situation = serializers.SerializerMethodField()
 
-    def get_situation(self, obj):
+    def get_situation(self, obj) -> str:
         today = datetime.now()
         is_in_debt = (
             obj.loans.filter(
