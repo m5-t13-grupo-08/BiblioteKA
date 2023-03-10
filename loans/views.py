@@ -14,6 +14,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import NotFound
 from loans.permissions import LoanPermission
 from rest_framework.permissions import IsAuthenticated
+from datetime import datetime, timedelta, date
 
 
 class LoanView(ListCreateAPIView):
@@ -28,7 +29,13 @@ class LoanView(ListCreateAPIView):
         book = get_object_or_404(Book, pk=self.kwargs.get("book_id"))
         user = get_object_or_404(User, pk=self.kwargs.get("user_id"))
 
-        found_copy = book.copies.filter(is_free=True).first()
+        found_copy = (
+            book.copies.filter(
+                is_free=True,
+            )
+            .order_by("id")
+            .first()
+        )
 
         if not found_copy:
             raise NotFound("Livro indisponível")
@@ -36,7 +43,15 @@ class LoanView(ListCreateAPIView):
         found_copy.is_free = False
         found_copy.save()
 
-        serializer.save(user=user, copy=found_copy)
+        deadline = date.today() + timedelta(days=15)
+
+        if deadline.strftime("%A") == "Saturday":
+            deadline = deadline + timedelta(days=2)
+
+        if deadline.strftime("%A") == "Sunday":
+            deadline = deadline + timedelta(days=1)
+
+        serializer.save(user=user, copy=found_copy, deadline=deadline)
 
     def get_queryset(self):
         queryset = self.queryset.filter(user__id=self.kwargs.get("user_id"))

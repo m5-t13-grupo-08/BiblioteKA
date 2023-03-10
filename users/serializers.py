@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from .models import User, Address
+from loans.models import Loan
 from datetime import datetime
 
 
@@ -33,9 +34,16 @@ class UserSerializer(serializers.ModelSerializer):
     def get_situation(self, obj):
         today = datetime.now()
         is_in_debt = (
-            obj.loans.filter(deadline__lt=today).filter(devolutions_date=None).first()
+            obj.loans.filter(
+                deadline__lt=today,
+            )
+            .filter(devolutions_date=None)
+            .first()
         )
+
         if is_in_debt:
+            is_in_debt.user.situation = "debt"
+            is_in_debt.user.save()
             return "debt"
 
         return "normal"
