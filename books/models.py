@@ -23,7 +23,6 @@ class Book(models.Model):
 
 
 class Copy(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
     buyed_at = models.DateField()
     price = models.FloatField()
     sector = models.CharField(
