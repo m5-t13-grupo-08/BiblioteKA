@@ -3,13 +3,12 @@ from rest_framework.generics import (
     RetrieveDestroyAPIView,
     ListAPIView,
 )
-from rest_framework.views import APIView, Request, Response, status
 from .models import Loan
 from datetime import datetime
 from users.models import User
 from .serializers import LoanSerializer
 from django.shortcuts import get_object_or_404
-from books.models import Copy, Book
+from books.models import Book
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import NotFound
 from loans.permissions import LoanPermission

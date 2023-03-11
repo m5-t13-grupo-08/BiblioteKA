@@ -11,9 +11,9 @@ class Situation(models.TextChoices):
 
 
 class UserCategory(models.TextChoices):
-    graduation = "graduation"  # 15 dias
-    post_graduation = "post_graduation"  # 30 dias
-    collaborator = "collaborator"  # 30 dias
+    graduation = "graduation"  
+    post_graduation = "post_graduation"  
+    collaborator = "collaborator"  
 
 
 class User(AbstractUser):
@@ -27,7 +27,7 @@ class User(AbstractUser):
     )
     first_name = models.CharField(max_length=35)
     last_name = models.CharField(max_length=35)
-    username = models.CharField(max_length=128, unique=True)  # matricula
+    username = models.CharField(max_length=128, unique=True)  
     password = models.CharField(max_length=128)
     situation = models.CharField(
         max_length=20, choices=Situation.choices, default=Situation.normal, null=False
