@@ -1,6 +1,6 @@
 # BiblioteKA - README
 
-Esta é uma aplicação de gestão de biblioteca cujo objetivo é gerenciar o empréstimo e devolução de livros, além de possibilitar o cadastro e login de usuários e colaboradores.
+Esta é uma aplicação de gestão de biblioteca, em Python/Django e com banco de dados postgreSQL, cujo objetivo é gerenciar o empréstimo e devolução de livros, além de possibilitar o cadastro e login de usuários e colaboradores.
 
 ## Funcionalidades
 As seguintes funcionalidades foram desenvolvidas para o MVP do projeto:
