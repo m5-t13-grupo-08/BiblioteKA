@@ -1,17 +1,13 @@
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
-    CreateAPIView,
-    RetrieveDestroyAPIView,
 )
 from rest_framework.views import APIView, Request, Response, status
 from .models import Book, Copy
 from .serializers import BookSerializer, CopySerializer
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.authentication import JWTAuthentication
-import ipdb
 from books.permissions import BookPermission
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class BookView(ListCreateAPIView):

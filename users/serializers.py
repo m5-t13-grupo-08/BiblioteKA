@@ -30,12 +30,19 @@ class UserSerializer(serializers.ModelSerializer):
 
     situation = serializers.SerializerMethodField()
 
-    def get_situation(self, obj):
+    def get_situation(self, obj) -> str:
         today = datetime.now()
         is_in_debt = (
-            obj.loans.filter(deadline__lt=today).filter(devolutions_date=None).first()
+            obj.loans.filter(
+                deadline__lt=today,
+            )
+            .filter(devolutions_date=None)
+            .first()
         )
+
         if is_in_debt:
+            is_in_debt.user.situation = "debt"
+            is_in_debt.user.save()
             return "debt"
 
         return "normal"

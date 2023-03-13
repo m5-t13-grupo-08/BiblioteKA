@@ -6,7 +6,7 @@ from .models import Book, Copy
 class BookSerializer(serializers.ModelSerializer):
     copies = serializers.SerializerMethodField()
 
-    def get_copies(self, obj: Copy):
+    def get_copies(self, obj: Copy) -> int:
         copies_count = obj.copies.all().count()
         return copies_count
 
