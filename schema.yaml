@@ -216,8 +216,8 @@ paths:
                 $ref: '#/components/schemas/Copy'
           description: ''
   /api/books/{book_id}/follow/:
-    post:
-      operationId: books_follow_create
+    put:
+      operationId: books_follow_update
       parameters:
       - in: path
         name: book_id
@@ -226,12 +226,57 @@ paths:
         required: true
       tags:
       - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Book'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Book'
+        required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
+    patch:
+      operationId: books_follow_partial_update
+      parameters:
+      - in: path
+        name: book_id
+        schema:
+          type: string
+        required: true
+      tags:
+      - books
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBook'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBook'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBook'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: ''
   /api/books/copy/{copy_id}/:
     get:
       operationId: books_copy_retrieve
@@ -432,9 +477,7 @@ paths:
       tags:
       - users
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -459,9 +502,7 @@ paths:
               $ref: '#/components/schemas/User'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -481,9 +522,7 @@ paths:
       tags:
       - users
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -514,9 +553,7 @@ paths:
               $ref: '#/components/schemas/User'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -546,9 +583,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedUser'
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -567,9 +602,7 @@ paths:
       tags:
       - users
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
