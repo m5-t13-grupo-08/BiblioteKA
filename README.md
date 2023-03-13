@@ -88,5 +88,22 @@ As seguintes funcionalidades extras também foram desenvolvidas:
 * Multa por devolução tardia do livro
 * Envio de lembrete um dia antes da data máxima do prazo de devolução
 
-## Modo Hard
-Além das funcionalidades descritas acima, foi implementada uma regra de negócio que regula o tempo máximo de empréstimo de uma determinada cópia, permitindo que livros com muitos seguidores tenham um período de empréstimo menor. Além disso, a aplicação foi adaptada para ser utilizada por várias bibliotecas simultaneamente. 
+## Comandos para inicialização e uso da Api
+
+1. Crie seu ambiente virtual:
+```bash
+python -m venv venv
+```
+2. Ative seu venv:
+```bash
+# linux:
+source venv/bin/activate
+# windows:
+.\venv\Scripts\activate
+```
+3. Instalar requirements.txt:
+```bash
+pip install -r requirements.txt
+```
+4. Preencher as variáveis de ambiente no .env; 
+* Setar a variável DEBUG como True
