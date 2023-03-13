@@ -36,3 +36,9 @@ class CopySerializer(serializers.ModelSerializer):
             "sector",
         ]
         read_only_fields = ["book"]
+
+
+class FollowSerializer(serializers.Serializer):
+    id = serializers.CharField(read_only=True)
+    book_id = serializers.CharField(read_only=True)
+    user_id = serializers.CharField(read_only=True)
