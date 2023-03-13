@@ -5,11 +5,25 @@ from rest_framework.generics import (
 )
 from .serializers import UserSerializer
 from .models import User, Address
+from .permissions import UserPermission
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class UserCreateView(ListCreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [UserPermission]
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+
+        if self.request.user.is_superuser:
+            return User.objects.all()
+
+        return User.objects.filter(
+            id=self.request.user.id,
+        )
 
     def create(self, request, *args, **kwargs):
         serialized = UserSerializer(data=request.data)
