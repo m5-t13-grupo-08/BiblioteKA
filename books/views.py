@@ -43,18 +43,6 @@ class CopyDetailView(RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = "copy_id"
 
 
-class FollowBookView2(APIView):
-    authentication_classes = [JWTAuthentication]
-
-    def post(self, request: Request, book_id: str) -> Response:
-        book = get_object_or_404(Book, id=book_id)
-        book.followed_by.add(request.user)
-
-        return Response(
-            {"message": "Book successfully followed!"}, status.HTTP_202_ACCEPTED
-        )
-
-
 class FollowBookView(UpdateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -66,3 +54,17 @@ class FollowBookView(UpdateAPIView):
     def perform_update(self, serializer):
         book = get_object_or_404(Book, pk=self.kwargs.get("book_id"))
         book.followed_by.add(self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, "_prefetched_objects_cache", None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(
+            {"message": "Book successfully followed!"}, status.HTTP_202_ACCEPTED
+        )
