@@ -5,8 +5,9 @@ from rest_framework.generics import (
 )
 from .serializers import UserSerializer
 from .models import User, Address
-from .permissions import UserPermission
+from .permissions import UserPermission, IsAdminOrUserOwner
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserCreateView(ListCreateAPIView):
@@ -38,6 +39,8 @@ class UserCreateView(ListCreateAPIView):
 
 
 class UserDetailView(RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminOrUserOwner]
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_url_kwarg = "user_id"
