@@ -10,7 +10,7 @@ from .serializers import LoanSerializer
 from django.shortcuts import get_object_or_404
 from books.models import Book
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from loans.permissions import LoanPermission
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime, timedelta, date
@@ -27,6 +27,13 @@ class LoanView(ListCreateAPIView):
     def perform_create(self, serializer):
         book = get_object_or_404(Book, pk=self.kwargs.get("book_id"))
         user = get_object_or_404(User, pk=self.kwargs.get("user_id"))
+
+        if user.situation == "debt":
+            user.situation = "suspended"
+            user.save()
+
+        if user.situation == "suspended":
+           raise PermissionDenied("O usuário está suspenso")
 
         found_copy = (
             book.copies.filter(
@@ -69,7 +76,6 @@ class LoanDetailView(RetrieveDestroyAPIView):
         loan = get_object_or_404(Loan, pk=self.kwargs.get("loan_id"))
 
         instance.copy.is_free = True
-        print(instance)
         instance.devolution_date = datetime.now()
 
 
