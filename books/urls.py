@@ -9,5 +9,6 @@ urlpatterns = [
     path("books/copy/<str:copy_id>/", views.CopyDetailView.as_view()),
     path("users/<str:user_id>/books/<str:book_id>/loan/", LoanView.as_view()),
     path("books/<str:book_id>/follow/", views.FollowBookView.as_view()),
+    path("books/<str:book_id>/unfollow/", views.UnfollowBookView.as_view()),
     path("books/loan/<str:loan_id>/", LoanDetailView.as_view()),
 ]

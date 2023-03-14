@@ -1,12 +1,12 @@
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
-    UpdateAPIView,
-    RetrieveDestroyAPIView,
+    DestroyAPIView,
+    CreateAPIView,
 )
 from rest_framework.views import APIView, Request, Response, status
 from .models import Book, Copy
-from .serializers import BookSerializer, CopySerializer
+from .serializers import BookSerializer, CopySerializer, FollowSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from books.permissions import BookPermission
@@ -43,28 +43,48 @@ class CopyDetailView(RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = "copy_id"
 
 
-class FollowBookView(UpdateAPIView):
+class FollowBookView(CreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     queryset = Book.objects.all()
-    serializer_class = BookSerializer
+    serializer_class = FollowSerializer
     lookup_url_kwarg = "book_id"
 
-    def perform_update(self, serializer):
+    def perform_create(self, serializer):
         book = get_object_or_404(Book, pk=self.kwargs.get("book_id"))
         book.followed_by.add(self.request.user)
+        book.save()
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop("partial", False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        if getattr(instance, "_prefetched_objects_cache", None):
-            instance._prefetched_objects_cache = {}
-
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
         return Response(
-            {"message": "Book successfully followed!"}, status.HTTP_202_ACCEPTED
+            {"message": "Book successfully followed!"},
+            status=status.HTTP_202_ACCEPTED,
+            headers=headers,
+        )
+
+
+class UnfollowBookView(DestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    queryset = Book.objects.all()
+    serializer_class = FollowSerializer
+    lookup_url_kwarg = "book_id"
+
+    def perform_destroy(self, instance):
+        book = get_object_or_404(Book, pk=self.kwargs.get("book_id"))
+        book.followed_by.remove(self.request.user)
+        book.save()
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(
+            {"message": "Book successfully unfollowed!"},
+            status=status.HTTP_202_ACCEPTED,
         )
