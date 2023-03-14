@@ -71,6 +71,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "_project.urls"
 
+CSRF_TRUSTED_ORIGINS = ["https://biblioteka-production.up.railway.app/"]
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
