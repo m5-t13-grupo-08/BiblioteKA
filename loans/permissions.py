@@ -7,10 +7,5 @@ class LoanPermission(permissions.BasePermission):
         if request.user.is_authenticated and request.user.is_superuser:
             return True
 
-        if (
-            request.user.situation == "normal"
-            and request.method not in permissions.SAFE_METHODS
-        ):
+        if view.kwargs["user_id"] == str(request.user.id):
             return True
-
-        return False
