@@ -22,12 +22,16 @@ class BookView(ListCreateAPIView):
 
 
 class BookDetailView(RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [BookPermission]
     serializer_class = BookSerializer
     queryset = Book.objects.all()
     lookup_url_kwarg = "book_id"
 
 
 class CopyView(ListCreateAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [BookPermission]
     serializer_class = CopySerializer
     queryset = Copy.objects.all()
     lookup_url_kwarg = "book_id"
@@ -38,6 +42,8 @@ class CopyView(ListCreateAPIView):
 
 
 class CopyDetailView(RetrieveUpdateDestroyAPIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [BookPermission]
     serializer_class = CopySerializer
     queryset = Copy.objects.all()
     lookup_url_kwarg = "copy_id"
