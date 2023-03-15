@@ -62,9 +62,7 @@ paths:
       tags:
       - books
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -95,9 +93,7 @@ paths:
               $ref: '#/components/schemas/Book'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -127,9 +123,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedBook'
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -148,9 +142,7 @@ paths:
       tags:
       - books
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -172,9 +164,7 @@ paths:
       tags:
       - books
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -205,9 +195,7 @@ paths:
               $ref: '#/components/schemas/Copy'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '201':
           content:
@@ -216,8 +204,8 @@ paths:
                 $ref: '#/components/schemas/Copy'
           description: ''
   /api/books/{book_id}/follow/:
-    put:
-      operationId: books_follow_update
+    post:
+      operationId: books_follow_create
       parameters:
       - in: path
         name: book_id
@@ -230,25 +218,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Book'
+              $ref: '#/components/schemas/Follow'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Book'
+              $ref: '#/components/schemas/Follow'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Book'
-        required: true
+              $ref: '#/components/schemas/Follow'
       security:
       - jwtAuth: []
       responses:
-        '200':
+        '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Book'
+                $ref: '#/components/schemas/Follow'
           description: ''
-    patch:
-      operationId: books_follow_partial_update
+  /api/books/{book_id}/unfollow/:
+    delete:
+      operationId: books_unfollow_destroy
       parameters:
       - in: path
         name: book_id
@@ -257,26 +245,11 @@ paths:
         required: true
       tags:
       - books
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedBook'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedBook'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedBook'
       security:
       - jwtAuth: []
       responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Book'
-          description: ''
+        '204':
+          description: No response body
   /api/books/copy/{copy_id}/:
     get:
       operationId: books_copy_retrieve
@@ -289,9 +262,7 @@ paths:
       tags:
       - books
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -322,9 +293,7 @@ paths:
               $ref: '#/components/schemas/Copy'
         required: true
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -354,9 +323,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedCopy'
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '200':
           content:
@@ -375,9 +342,7 @@ paths:
       tags:
       - books
       security:
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
+      - jwtAuth: []
       responses:
         '204':
           description: No response body
@@ -769,6 +734,22 @@ components:
       - buyed_at
       - id
       - price
+    Follow:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        book_id:
+          type: string
+          readOnly: true
+        user_id:
+          type: string
+          readOnly: true
+      required:
+      - book_id
+      - id
+      - user_id
     Loan:
       type: object
       properties:
@@ -1117,13 +1098,6 @@ components:
         * `post_graduation` - Post Graduation
         * `collaborator` - Collaborator
   securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: sessionid
     jwtAuth:
       type: http
       scheme: bearer
