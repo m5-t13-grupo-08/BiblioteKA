@@ -43,9 +43,8 @@ class UserSerializer(serializers.ModelSerializer):
         if is_in_debt:
             is_in_debt.user.situation = "debt"
             is_in_debt.user.save()
-            return "debt"
 
-        return "normal"
+        return obj.situation
 
     def __init__(self, *args, **kwargs):
         super(UserSerializer, self).__init__(*args, **kwargs)
