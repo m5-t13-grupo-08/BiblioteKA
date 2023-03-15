@@ -6,7 +6,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.core.management.base import BaseCommand
 from django_apscheduler.jobstores import DjangoJobStore
-from datetime import date
+from datetime import date, timedelta
 from loans.models import Loan
 from users.models import User
 from django.shortcuts import get_object_or_404
@@ -23,6 +23,16 @@ def get_late_users():
             user = get_object_or_404(User, id=loan.user.id)
             user.situation = "debt"
             user.save()
+
+    suspended_users = User.objects.filter(situation="suspended")
+
+    for user in suspended_users:
+        last_loan = user.loans.last()
+        if last_loan.devolutions_date:
+            regularize = last_loan.devolutions_date + timedelta(days=7)
+            if regularize >= date.today():
+                user.situation = "normal"
+                user.save()
 
 
 class Command(BaseCommand):

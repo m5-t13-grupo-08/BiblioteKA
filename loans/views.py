@@ -69,6 +69,11 @@ class LoanDetailView(RetrieveDestroyAPIView):
     lookup_url_kwarg = "loan_id"
 
     def perform_destroy(self, instance):
+
+        if instance.user.situation == "debt":
+            instance.user.situation = "suspended"
+            instance.user.save()
+
         instance.copy.is_free = True
         instance.copy.save()
 
