@@ -10,9 +10,9 @@ from .serializers import LoanSerializer
 from django.shortcuts import get_object_or_404
 from books.models import Book
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from loans.permissions import LoanPermission
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from datetime import datetime, timedelta, date
 
 
@@ -27,6 +27,9 @@ class LoanView(ListCreateAPIView):
     def perform_create(self, serializer):
         book = get_object_or_404(Book, pk=self.kwargs.get("book_id"))
         user = get_object_or_404(User, pk=self.kwargs.get("user_id"))
+
+        if user.situation != "normal":
+            raise PermissionDenied(f"User status: {user.situation}")
 
         found_copy = (
             book.copies.filter(
@@ -59,18 +62,18 @@ class LoanView(ListCreateAPIView):
 
 class LoanDetailView(RetrieveDestroyAPIView):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
     serializer_class = LoanSerializer
     queryset = Loan.objects.all()
     lookup_url_kwarg = "loan_id"
 
     def perform_destroy(self, instance):
-        loan = get_object_or_404(Loan, pk=self.kwargs.get("loan_id"))
-
         instance.copy.is_free = True
-        print(instance)
-        instance.devolution_date = datetime.now()
+        instance.copy.save()
+
+        instance.devolutions_date = datetime.now()
+        instance.save()
 
 
 class LoanHistoricView(ListAPIView):
